@@ -460,7 +460,7 @@
   /* PROJECTS */
   #projects .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: 1fr;
     gap: 28px;
     max-width: 1100px;
   }
@@ -544,6 +544,7 @@
   /* XR SLIDESHOW */
   .project-card.featured { grid-column: 1 / -1; }
   .xr-slideshow { margin-top: 28px; }
+  .xr-slideshow.light .xr-slides-viewport { background: #EEF1F5; }
   .xr-slides-viewport {
     position: relative;
     overflow: hidden;
@@ -942,7 +943,7 @@
 
       <div class="xr-slideshow" aria-roledescription="carousel" aria-label="Design Day presentation slides">
         <div class="xr-slides-viewport">
-          <div class="xr-slides-track" id="xrTrack">
+          <div class="xr-slides-track">
             <img src="xr-slide-1.jpg" alt="Slide 1: SAMBA — Virtual Chemical Pilot Plant, GNG1103">
             <img src="xr-slide-2.jpg" alt="Slide 2: What is the problem — limited access to the chemical engineering pilot plant" loading="lazy">
             <img src="xr-slide-3.jpg" alt="Slide 3: uOttawa RXN, a virtual experience — main menu, navigation, PPE interface, information panels" loading="lazy">
@@ -951,12 +952,12 @@
             <img src="xr-slide-6.jpg" alt="Slide 6: Thank you for listening" loading="lazy">
             <img src="xr-slide-7.jpg" alt="Slide 7: Takeaways — three modes, 360° images and 3D models, intuitive UI, expandable" loading="lazy">
           </div>
-          <button class="xr-nav xr-prev" id="xrPrev" aria-label="Previous slide">&#8249;</button>
-          <button class="xr-nav xr-next" id="xrNext" aria-label="Next slide">&#8250;</button>
+          <button class="xr-nav xr-prev" aria-label="Previous slide">&#8249;</button>
+          <button class="xr-nav xr-next" aria-label="Next slide">&#8250;</button>
         </div>
         <div class="xr-controls">
-          <div class="xr-dots" id="xrDots"></div>
-          <span class="xr-count" id="xrCount">1 / 7</span>
+          <div class="xr-dots"></div>
+          <span class="xr-count">1 / 7</span>
         </div>
       </div>
 
@@ -969,6 +970,38 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
           Project Files (Google Drive, 1.6 GB)
         </a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-title">Porsche 911 (991) — Full-Vehicle CAD Recreation</div>
+      <div class="project-org">Personal Project · SolidWorks · ~4 weeks</div>
+      <p class="project-desc">Reverse-engineered a complete Porsche 911 (991) Targa in SolidWorks from a 1:18 scale model. I measured the model with calipers, scaled every dimension 18× to full size, and built the whole car from scratch — body panels, opening doors, Targa roof hoop and glass, a full interior (dashboard, steering wheel, displays, centre console, shifter), lighting, and detailed multi-spoke wheels with brake discs and tire tread.</p>
+      <div class="project-tags">
+        <span class="project-tag">SolidWorks</span>
+        <span class="project-tag">Reverse Engineering</span>
+        <span class="project-tag">Surface Modelling</span>
+        <span class="project-tag">Assemblies</span>
+        <span class="project-tag">Precision Measurement</span>
+      </div>
+
+      <div class="xr-slideshow light" aria-roledescription="carousel" aria-label="Porsche 911 CAD model images">
+        <div class="xr-slides-viewport">
+          <div class="xr-slides-track">
+            <img src="porsche-1.jpg" alt="Front three-quarter view of the SolidWorks Porsche 911 Targa model with the driver door open">
+            <img src="porsche-2.jpg" alt="Side profile of the CAD model showing the Targa roof hoop, opening door and multi-spoke wheels" loading="lazy">
+            <img src="porsche-3.jpg" alt="Rear three-quarter view showing the engine-lid vents, full-width tail light and twin exhausts" loading="lazy">
+            <img src="porsche-4.jpg" alt="Rear view of the model with the interior visible through the rear glass" loading="lazy">
+            <img src="porsche-5.jpg" alt="Close-up of the modelled interior: dashboard, steering wheel, centre display, console and shifter" loading="lazy">
+            <img src="porsche-6.jpg" alt="Close-up of the front wheel showing spoke geometry, brake disc and tire tread" loading="lazy">
+          </div>
+          <button class="xr-nav xr-prev" aria-label="Previous image">&#8249;</button>
+          <button class="xr-nav xr-next" aria-label="Next image">&#8250;</button>
+        </div>
+        <div class="xr-controls">
+          <div class="xr-dots"></div>
+          <span class="xr-count">1 / 6</span>
+        </div>
       </div>
     </div>
 
@@ -1106,15 +1139,14 @@
   onScroll();
 })();
 
-(function () {
-  var track = document.getElementById('xrTrack');
-  if (!track) return;
-  var slides = track.children, n = slides.length, i = 0;
-  var dots = document.getElementById('xrDots');
-  var count = document.getElementById('xrCount');
+document.querySelectorAll('.xr-slideshow').forEach(function (show) {
+  var track = show.querySelector('.xr-slides-track');
+  var n = track.children.length, i = 0;
+  var dots = show.querySelector('.xr-dots');
+  var count = show.querySelector('.xr-count');
   for (var k = 0; k < n; k++) {
     var b = document.createElement('button');
-    b.setAttribute('aria-label', 'Go to slide ' + (k + 1));
+    b.setAttribute('aria-label', 'Go to image ' + (k + 1));
     b.addEventListener('click', (function (k) { return function () { go(k); }; })(k));
     dots.appendChild(b);
   }
@@ -1124,8 +1156,8 @@
     for (var j = 0; j < n; j++) dots.children[j].setAttribute('aria-current', j === i ? 'true' : 'false');
     count.textContent = (i + 1) + ' / ' + n;
   }
-  document.getElementById('xrPrev').addEventListener('click', function () { go(i - 1); });
-  document.getElementById('xrNext').addEventListener('click', function () { go(i + 1); });
+  show.querySelector('.xr-prev').addEventListener('click', function () { go(i - 1); });
+  show.querySelector('.xr-next').addEventListener('click', function () { go(i + 1); });
   var vp = track.parentNode, x0 = null;
   vp.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
   vp.addEventListener('touchend', function (e) {
@@ -1140,7 +1172,7 @@
     if (e.key === 'ArrowRight') go(i + 1);
   });
   go(0);
-})();
+});
 </script>
 
 </body>
